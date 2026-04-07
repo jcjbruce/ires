@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRes — Indigenous Resilience Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#438F71;--green-light:#5aab8a;--green-dark:#357a5e;
+  --navy:#0C234B;--navy-light:#1a3a6b;
+  --cream:#F0F1EB;--warm:#F5F3EF;--white:#fff;
+  --terra:#C47A45;--teal:#3D7A74;--sage:#6B8F71;
+  --steel:#4A708B;--brown:#8B6B5A;--forest:#5A7A5A;
+  --plum:#7A6B8B;--amber:#8B7A5A;
+  --bg:var(--cream);--card:var(--white);--text:#1a1a1a;--text2:#5a6570;
+  --border:#ddd9d0;--glow:rgba(67,143,113,.08);
+}
+body.dark{
+  --bg:#0d1117;--card:#161b22;--text:#e6e8eb;--text2:#8b949e;
+  --border:#30363d;--glow:rgba(67,143,113,.06);--navy:#0d1117;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);
+  line-height:1.6;min-height:100vh;overflow-x:hidden;transition:background .4s,color .4s;
+}
+
+/* ── Header ── */
+.header{
+  background:var(--navy);
+  padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;height:56px;
+}
+.header-left{display:flex;align-items:center;gap:1.2rem}
+.header-logo{
+  font-family:'Josefin Sans',sans-serif;font-weight:700;font-size:1.5rem;
+  color:var(--green);letter-spacing:.02em;line-height:1;
+}
+.header-logo small{
+  display:block;font-size:.55rem;font-weight:500;color:rgba(255,255,255,.6);
+  letter-spacing:.15em;text-transform:uppercase;margin-top:-.1rem;
+}
+.header-title{
+  font-family:'Josefin Sans',sans-serif;color:#fff;font-size:.85rem;font-weight:500;
+  letter-spacing:.04em;text-transform:uppercase;opacity:.85;
+}
+.header-actions{display:flex;gap:.6rem}
+.btn-sm{
+  background:var(--green);border:none;color:#fff;
+  padding:.4rem 1rem;border-radius:4px;cursor:pointer;font-size:.7rem;font-weight:600;
+  transition:all .25s;font-family:'Josefin Sans',sans-serif;text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.btn-sm:hover{background:var(--green-light);transform:translateY(-1px);box-shadow:0 4px 12px rgba(67,143,113,.3)}
+
+/* ── Tabs ── */
+.tabs{
+  display:flex;background:var(--card);border-bottom:2px solid var(--border);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 1.5rem;
+}
+.tab{
+  padding:.9rem 1.6rem;border:none;background:transparent;cursor:pointer;
+  font-size:.75rem;font-weight:600;color:var(--text2);white-space:nowrap;
+  transition:all .25s;position:relative;font-family:'Josefin Sans',sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.tab::after{
+  content:'';position:absolute;bottom:-2px;left:0;right:0;
+  height:3px;background:var(--green);border-radius:2px 2px 0 0;
+  transform:scaleX(0);transition:transform .3s ease;
+}
+.tab:hover{color:var(--text)}
+.tab:hover::after{transform:scaleX(.7)}
+.tab.active{color:var(--green)}
+.tab.active::after{transform:scaleX(1)}
+
+/* ── Main Layout ── */
+.main{display:flex;min-height:calc(100vh - 100px)}
+.col-left{
+  flex:1;padding:2.5rem 3rem;overflow-y:auto;max-height:calc(100vh - 100px);
+}
+.col-right{
+  width:440px;background:var(--card);border-left:2px solid var(--border);
+  overflow-y:auto;max-height:calc(100vh - 100px);
+}
+
+/* ── Faculty Intro ── */
+.intro{margin-bottom:1.5rem}
+.intro-label{
+  font-family:'Josefin Sans',sans-serif;font-size:.65rem;font-weight:600;
+  color:var(--green);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem;
+}
+.intro-name{
+  font-family:'Josefin Sans',sans-serif;font-size:2rem;font-weight:700;
+  color:var(--text);line-height:1.15;margin-bottom:.2rem;text-transform:uppercase;
+}
+.intro-name .tribal{
+  font-size:.8rem;font-weight:500;color:var(--green);margin-left:.6rem;
+  text-transform:none;letter-spacing:0;
+}
+.intro-role{
+  font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--text2);
+  margin-bottom:1rem;font-weight:500;
+}
+.intro-summary{
+  font-size:.92rem;line-height:1.7;color:var(--text);
+  border-left:4px solid var(--green);padding-left:1.2rem;
+  background:var(--glow);border-radius:0 6px 6px 0;padding:.9rem 1.2rem;
+}
+
+/* ── Diagram ── */
+.diagram-box{
+  display:flex;justify-content:center;align-items:center;padding:1rem 0;
+}
+.diagram-box svg{max-width:100%;height:auto}
+.hint{
+  text-align:center;font-size:.68rem;color:var(--text2);margin-top:.2rem;
+  font-family:'DM Sans',sans-serif;font-weight:500;letter-spacing:.02em;
+}
+
+/* ── D3 Segments ── */
+.seg{cursor:pointer;transition:all .3s ease}
+.seg:hover{filter:brightness(1.15) drop-shadow(0 0 10px rgba(67,143,113,.35))}
+.seg.dim{opacity:.25;transition:opacity .3s}
+.seg.glow{filter:brightness(1.12) drop-shadow(0 0 14px rgba(67,143,113,.5))}
+.seg-text{pointer-events:none;user-select:none;transition:opacity .3s}
+.center-text{pointer-events:none;user-select:none}
+
+/* ── Side Panel ── */
+.panel-header{
+  padding:1.4rem 1.5rem 1rem;border-bottom:2px solid var(--border);
+}
+.panel-eyebrow{
+  font-family:'Josefin Sans',sans-serif;font-size:.6rem;font-weight:600;
+  color:var(--green);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.2rem;
+}
+.panel-title{
+  font-family:'Josefin Sans',sans-serif;font-size:1.1rem;font-weight:700;
+  color:var(--text);text-transform:uppercase;letter-spacing:.03em;
+}
+.section{border-bottom:1px solid var(--border);overflow:hidden}
+.section:last-child{border-bottom:none}
+.section-head{
+  padding:.75rem 1.5rem;display:flex;align-items:center;gap:.6rem;
+  cursor:pointer;transition:background .2s;
+}
+.section-head:hover{background:var(--glow)}
+.section-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;
+  box-shadow:0 0 0 2px rgba(255,255,255,.3);transition:box-shadow .3s}
+.section-head:hover .section-dot{box-shadow:0 0 0 3px rgba(67,143,113,.3)}
+.section-label{
+  font-family:'Josefin Sans',sans-serif;font-size:.78rem;font-weight:700;
+  color:var(--text);flex:1;letter-spacing:.02em;text-transform:uppercase;
+}
+.section-arrow{
+  font-size:.6rem;color:var(--text2);transition:transform .3s;
+}
+.section.open .section-arrow{transform:rotate(180deg)}
+.section-body{
+  max-height:0;overflow:hidden;transition:max-height .45s ease;
+  padding:0 1.5rem;
+}
+.section.open .section-body{max-height:700px;padding:.2rem 1.5rem .9rem}
+.section-body p{
+  font-size:.82rem;color:var(--text);line-height:1.6;margin-bottom:.5rem;
+  padding-left:1rem;position:relative;
+}
+.section-body p::before{
+  content:'';position:absolute;left:0;top:.5rem;
+  width:5px;height:5px;border-radius:50%;background:var(--green);opacity:.6;
+}
+.section-body .pub{
+  font-size:.7rem;color:var(--text2);font-style:italic;margin-top:-.15rem;
+  margin-bottom:.6rem;padding-left:1rem;
+}
+
+/* ── Footer ── */
+footer{
+  background:var(--navy);
+  color:rgba(255,255,255,.65);padding:1.5rem 2.5rem;font-size:.72rem;
+  line-height:1.7;text-align:center;font-family:'DM Sans',sans-serif;
+}
+footer strong{color:var(--green)}
+
+/* ── Responsive ── */
+@media(max-width:1024px){
+  .main{flex-direction:column}
+  .col-left{max-height:none;padding:1.5rem}
+  .col-right{width:100%;max-height:50vh;border-left:none;border-top:2px solid var(--border)}
+}
+@media(max-width:600px){
+  .header{padding:0 1rem;height:48px}
+  .header-logo{font-size:1.2rem}
+  .header-title{display:none}
+  .tab{padding:.65rem 1rem;font-size:.7rem}
+  .col-left{padding:1.2rem}
+  .intro-name{font-size:1.4rem}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">IRes<small>Hub</small></div>
+    <div class="header-title">Indigenous Resilience Center</div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-sm" onclick="toggleTheme()" id="themeBtn">Dark Mode</button>
+  </div>
+</div>
+
+<nav class="tabs" id="tabs"></nav>
+
+<div class="main">
+  <div class="col-left" id="left">
+    <div class="intro" id="intro"></div>
+    <div class="diagram-box" id="chart"></div>
+    <p class="hint">Hover over a domain to highlight &middot; Click to explore details</p>
+  </div>
+  <div class="col-right" id="panel"></div>
+</div>
+
+<footer>
+  <strong>Land Acknowledgment</strong> &mdash; The University of Arizona is on the land and territories of Indigenous peoples. Today, Arizona is home to 22 federally recognized tribes, with Tucson being home to the O'odham and the Yaqui. The University strives to build sustainable relationships with sovereign Native Nations and Indigenous communities through education, partnerships, and community service.
+</footer>
+
+<script>
+/* ═══════════════════════════════════════
+   COLOR PALETTE
+   ═══════════════════════════════════════ */
+const P = {
+  green:'#438F71',terra:'#C47A45',teal:'#3D7A74',navy:'#0C234B',sage:'#6B8F71',
+  steel:'#4A708B',brown:'#8B6B5A',forest:'#5A7A5A',plum:'#7A6B8B',
+  amber:'#8B7A5A',clay:'#A0705A',sand:'#BFA98A'
+};
+
+/* ═══════════════════════════════════════
+   FACULTY DATA
+   ═══════════════════════════════════════ */
+const DATA = {
+
+ires:{
+  name:"Indigenous Resilience Center",
+  tribal:"University of Arizona",
+  label:"Our Mission",
+  role:"Facilitating Indigenous-led climate, environment, and resilience research",
+  summary:"IRes unites four core faculty whose work spans hydrology, environmental health, regenerative agriculture, and mine remediation — all grounded in community-engaged methods that center Indigenous knowledge and sovereignty. Together they address the interconnected challenges of water contamination, food insecurity, climate impacts, and environmental justice across tribal nations in the American Southwest and beyond.",
+  center:["INDIGENOUS","RESILIENCE","CENTER"],
+  domains:[
+    {label:"Water\nSecurity",color:P.terra,section:0},
+    {label:"Food\nSovereignty",color:P.teal,section:1},
+    {label:"Environmental\nHealth",color:P.sage,section:2},
+    {label:"Mine\nRemediation",color:P.steel,section:3},
+    {label:"Climate\nAdaptation",color:P.brown,section:4},
+    {label:"STEM &\nEducation",color:P.forest,section:5},
+    {label:"Geospatial\nScience",color:P.plum,section:2},
+    {label:"Regenerative\nAgriculture",color:P.amber,section:1}
+  ],
+  panelTitle:"Cross-Faculty Research",
+  panelEyebrow:"How Four Disciplines Converge at IRes",
+  sections:[
+    {title:"Water Security & Contamination",color:P.terra,items:[
+      {text:"Chief and Hoover jointly investigate groundwater quality on the Navajo Nation, including arsenic, uranium, and fluoride contamination in unregulated water sources that serve thousands of families.",pub:"Carrol et al. (2025); Whitmore et al. (2025)"},
+      {text:"Chief's off-grid solar-powered water treatment units address the reality that nearly 30% of Diné homes lack running water — a disparity that became acute during the COVID-19 pandemic."},
+      {text:"Hoover maps the geospatial distribution of contaminant exposure across tribal lands, building analytical tools communities can own and operate independently."}
+    ]},
+    {title:"Food Systems & Agriculture",color:P.teal,items:[
+      {text:"Johnson brings 250 generations of Hopi dryland farming knowledge to the study of climate-resilient Indigenous crops — corn, beans, squash, and melons grown without irrigation in one of the driest regions of North America."},
+      {text:"Chief's Indige-FEWSS program treats food, energy, and water as an interconnected system, training graduate students in off-grid technologies like Indigeponics (Indigenous aquaponics) and solar-powered greenhouses."},
+      {text:"Johnson and Chief co-authored research on groundwater fluoride exposure and its effects on Arizona livestock, bridging agriculture and water science.",pub:"Whitmore et al. (2025)"}
+    ]},
+    {title:"Environmental Health & Justice",color:P.sage,items:[
+      {text:"Hoover's research documents how treaty abrogation, ineffective federal policies, and lack of infrastructure converge to create environmental health disparities in Native American communities.",pub:"Lewis, Hoover & MacKenzie (2017)"},
+      {text:"Chief led the Diné Exposure Project after the 2015 Gold King Mine spill released 3 million gallons of toxic wastewater into the Animas and San Juan rivers — she gave public presentations in Navajo to affected families."},
+      {text:"Hoover's Navajo Birth Cohort Study tracks prenatal metal exposures and infant developmental outcomes, connecting environmental contamination to intergenerational health impacts.",pub:"Hoover et al. (2021, 2023)"}
+    ]},
+    {title:"Mine Waste & Land Restoration",color:P.steel,items:[
+      {text:"De Vore investigates how arsenic, iron, and manganese mobilize from abandoned mine waste sediments — understanding the chemical triggers (aerobic vs. anaerobic) that release contaminants into soil and water.",pub:"DeVore et al. (2022, ACS Earth & Space Chemistry)"},
+      {text:"Her phytoremediation research reveals how plants like Tamarix (salt cedar) and Little Bluestem uptake uranium near mine sites, with nanocrystals forming inside root cells — opening pathways for plant-based cleanup strategies.",pub:"Rodríguez-Freire, DeVore et al. (2021)"},
+      {text:"Chief and De Vore co-lead an NSF-funded project at Grand Canyon to Indigenize geoscience education in partnership with tribes, the National Park Service, ASU, and UNM."}
+    ]},
+    {title:"Climate Adaptation & Resilience",color:P.brown,items:[
+      {text:"Chief's research on climate change impacts on water resources of American Indians and Alaska Natives is foundational to the U.S. National Climate Assessment.",pub:"Brubaker, Chief et al. (2013)"},
+      {text:"Johnson's Hopi dryland farming — practiced for 2,000+ years without irrigation — is a living model of climate adaptation that predates and outperforms many modern resilience strategies."},
+      {text:"The SCORCH center (Hoover as MPI) studies how climate change compounds existing environmental health risks in Southwest communities, from heat exposure to water scarcity."}
+    ]},
+    {title:"STEM Education & Sovereignty",color:P.forest,items:[
+      {text:"Chief created a PhD minor in Indigenous Food, Energy, and Water Systems and the Native Voices in STEM seminar series, now institutionalized by UA. Indige-FEWSS has trained 39+ graduate students."},
+      {text:"De Vore is the first Native American faculty member in UA's School of Engineering — her presence and mentorship are themselves a form of structural change in STEM."},
+      {text:"All four faculty collectively represent Indigenous scholarship at SACNAS and AISES, training the next generation of Indigenous scientists to lead their own communities' research agendas."}
+    ]}
+  ]
+},
+
+chief:{
+  name:"Dr. Karletta Chief",
+  tribal:"Diné (Navajo)",
+  label:"Core Faculty",
+  role:"Director, IRes · Professor & Extension Specialist, Environmental Science · Haury Endowed Professor",
+  summary:"A hydrologist who grew up on the Navajo Nation without electricity or running water, Chief's research addresses the water, food, and energy challenges facing Indigenous communities. She combines physically-based hydrology with traditional knowledge, working directly with tribal nations to build off-grid water systems, respond to environmental disasters, and train the next generation of Indigenous STEM scholars. Her identity, she says, is \"water-based — from the Bitter Water Clan.\"",
+  center:["INDIGENOUS","WATER SECURITY","& COMMUNITY","RESILIENCE"],
+  domains:[
+    {label:"Watershed\nHydrology",color:P.terra,section:0},
+    {label:"Climate\nImpacts",color:P.teal,section:1},
+    {label:"Gold King\nMine Spill",color:P.sage,section:2},
+    {label:"Off-Grid\nWater Tech",color:P.steel,section:3},
+    {label:"Food-Energy-\nWater Systems",color:P.brown,section:4},
+    {label:"Tribal\nExtension",color:P.forest,section:5}
+  ],
+  panelTitle:"Research Portfolio",
+  panelEyebrow:"Dr. Chief's Core Research Areas",
+  sections:[
+    {title:"Watershed Hydrology & Soil Physics",color:P.terra,items:[
+      {text:"Improving understanding, tools, and predictions of watershed hydrology — particularly unsaturated flow in arid environments and how fire and human disturbances alter soil hydrology."},
+      {text:"Developed a soil corer air permeameter for measuring soil air permeability and saturated hydraulic conductivity in post-fire landscapes.",pub:"Chief (2007), PhD Dissertation, UA"},
+      {text:"Groundwater quality research at Dilkon Chapter on the Navajo Nation, documenting arsenic and uranium in community water sources.",pub:"Carrol et al. (2025), Arizona Cooperative Extension"}
+    ]},
+    {title:"Climate Change & Indigenous Communities",color:P.teal,items:[
+      {text:"Authored foundational work on climate change impacts on water resources of American Indians and Alaska Natives for the U.S. National Climate Assessment.",pub:"Brubaker, Chief et al. (2013)"},
+      {text:"Community-engaged participatory climate research with the Pyramid Lake Paiute Tribe, integrating traditional knowledge with climate science."},
+      {text:"Led Navajo COVID-19 Risks and Indigenous Resilience project — the pandemic exposed how water and infrastructure gaps compound climate vulnerability."}
+    ]},
+    {title:"Gold King Mine Spill Response",color:P.sage,items:[
+      {text:"Principal investigator for the Diné Exposure Project, studying the social, spiritual, and health impacts of the 2015 spill that released 3 million gallons of toxic wastewater into rivers used by Navajo communities."},
+      {text:"Gave public presentations in Navajo language to farmers, ranchers, and families affected by the spill — bridging scientific findings and community understanding.",pub:"Anako, Chief et al. (2023), Journal of Rural Studies"},
+      {text:"Reframed the disaster through a Diné-centered lens, documenting impacts \"across space and time\" rather than through a purely Western scientific framework."}
+    ]},
+    {title:"Off-Grid Water & Energy Technology",color:P.steel,items:[
+      {text:"Piloted solar-powered water treatment units on the Navajo Nation during the pandemic, providing safe drinking water to communities without running water."},
+      {text:"Building a solar-powered greenhouse for wastewater-to-food production — turning a waste problem into a food security solution."},
+      {text:"Student-led projects under her mentorship include solar efficiency studies, contamination monitoring systems, and Indigeponics (an Indigenous approach to aquaponics)."}
+    ]},
+    {title:"Food-Energy-Water Systems (Indige-FEWSS)",color:P.brown,items:[
+      {text:"PI for the NSF Research Traineeship grounded in the Diné concept of hózhó (balance and harmony) — training 39+ graduate students in interconnected food, energy, and water challenges."},
+      {text:"Created a PhD minor in Indigenous Food, Energy, and Water Systems and the Native Voices in STEM seminar series, both now institutionalized at UA.",pub:"NSF NRT Indige-FEWSS"},
+      {text:"Co-leads the NSF Native FEWS Alliance connecting tribal colleges and universities across the country in collaborative FEWS research."}
+    ]},
+    {title:"Tribal Extension & Community Engagement",color:P.forest,items:[
+      {text:"Extension specialist who brings hydrology expertise to Native American communities in culturally sensitive ways — assessing information needs and co-developing applied science projects."},
+      {text:"TCUP (Tribal Colleges and Universities Program) has engaged over 40 students in hands-on research with tribal communities."},
+      {text:"Awards include AGU Fellow (2020), WINGS WorldQuest Women of Discovery (2022), Haury Endowed Professor in Indigenous Resilience (2025), and Stanford Distinguished Alumni Scholar (2013)."}
+    ]}
+  ]
+},
+
+hoover:{
+  name:"Dr. Joseph H. Hoover",
+  tribal:"",
+  label:"Core Faculty",
+  role:"Assistant Professor, Environmental Science · MPI, SCORCH Center",
+  summary:"An environmental health scientist who uses geospatial technology and community-engaged methods to map how environmental contaminants — arsenic, uranium, fluoride, heavy metals — reach Indigenous communities through unregulated water sources, abandoned mines, and degraded infrastructure. His goal is not just to document disparities but to build analytical tools that communities themselves can own and use for future monitoring and advocacy.",
+  center:["ENVIRONMENTAL","HEALTH EQUITY","& GEOSPATIAL","SCIENCE"],
+  domains:[
+    {label:"Drinking\nWater Quality",color:P.terra,section:0},
+    {label:"Uranium &\nMetal Exposure",color:P.teal,section:1},
+    {label:"Health\nDisparities",color:P.sage,section:2},
+    {label:"GIS &\nGeospatial Tech",color:P.steel,section:3},
+    {label:"Community-\nBased Research",color:P.brown,section:4}
+  ],
+  panelTitle:"Research Portfolio",
+  panelEyebrow:"Dr. Hoover's Core Research Areas",
+  sections:[
+    {title:"Drinking Water Quality & Access",color:P.terra,items:[
+      {text:"Documented elevated arsenic and uranium concentrations in unregulated water sources across the Navajo Nation — sources that thousands of families rely on daily because piped water infrastructure does not reach their homes.",pub:"Hoover et al. (2017), Exposure and Health"},
+      {text:"Joint research with Chief on groundwater quality at Dilkon Chapter, Navajo Nation, and fluoride exposure affecting both human health and livestock.",pub:"Carrol et al. (2025); Whitmore et al. (2025)"},
+      {text:"Develops community analytical tools designed so tribal communities can independently monitor their own water quality long after the research team leaves."}
+    ]},
+    {title:"Uranium & Metal Mixture Exposure",color:P.teal,items:[
+      {text:"Studies how proximity to abandoned uranium mine sites creates complex metal mixture exposures — not just single contaminants but synergistic combinations of arsenic, uranium, vanadium, and other metals."},
+      {text:"Compared meteorological data sources for geospatial modeling of exposure pathways around uranium mine sites in the Southwest.",pub:"Hoover et al. (2023), Science of The Total Environment"},
+      {text:"Metal mixture exposures and autoantibody screening in Navajo communities — linking environmental contamination to immune system disruption.",pub:"Hoover et al. (2023), Environmental Health"}
+    ]},
+    {title:"Environmental Health Disparities",color:P.sage,items:[
+      {text:"Foundational paper documenting how treaty abrogation, ineffective federal policies, and lack of infrastructure converge to create compounding health disparities in Native American communities.",pub:"Lewis, Hoover & MacKenzie (2017), Current Environmental Health Reports"},
+      {text:"Navajo Birth Cohort Study: tracking prenatal metal exposures and their effects on infant developmental outcomes — connecting environmental contamination to intergenerational health impacts.",pub:"Hoover et al. (2021, 2023)"},
+      {text:"Research on preterm birth risk associated with metal mixture exposure among pregnant women in the Navajo Birth Cohort.",pub:"Hoover et al. (2023), Environmental Health Perspectives"}
+    ]},
+    {title:"GIS & Geospatial Technology",color:P.steel,items:[
+      {text:"Core Lead for the Data Visualization Core at SCORCH (Southwest Center on Resilience for Climate Change and Health), building visual tools to communicate environmental health data."},
+      {text:"Uses GIS and remote sensing to map the spatial distribution of environmental exposures, water access gaps, and health outcomes across tribal lands."},
+      {text:"Advancing community-based research methods in GIScience — ensuring geospatial tools serve community priorities rather than extractive academic agendas.",pub:"Hoover et al. (2025), Cartography and Geographic Information Science"}
+    ]},
+    {title:"Community-Engaged Research Methods",color:P.brown,items:[
+      {text:"Co-PI for the NIEHS Center for Native American Environmental Health Equity Research (with UNM) — a center built on community-driven project co-development and training."},
+      {text:"Research approach emphasizes building sustaining partnerships: communities define the questions, co-design the methods, and retain ownership of the data and tools."},
+      {text:"Previously held positions at Montana State University Billings and University of New Mexico before joining UA, bringing cross-institutional perspective on Indigenous health research."}
+    ]}
+  ]
+},
+
+johnson:{
+  name:"Dr. Michael Kotutwa Johnson",
+  tribal:"Hopi",
+  label:"Core Faculty",
+  role:"Assistant Professor, School of Natural Resources and the Environment",
+  summary:"A 250th-generation traditional Hopi dryland farmer who has grown corn, beans, squash, and melons since boyhood — without irrigation, in one of the driest regions of North America. His research documents how 2,000+ years of Hopi agricultural knowledge constitutes a living, proven model of climate resilience, and he works to revitalize Indigenous food systems by increasing the use of climate-adapted native crops that strengthen both community health and food sovereignty.",
+  center:["REVITALIZATION","OF INDIGENOUS","FOOD SYSTEMS"],
+  domains:[
+    {label:"Dryland\nFarming",color:P.terra,section:0},
+    {label:"Indigenous\nCrops",color:P.teal,section:1},
+    {label:"Food\nSovereignty",color:P.sage,section:2},
+    {label:"Conservation\n& Soil",color:P.steel,section:3},
+    {label:"Community\nEngagement",color:P.brown,section:4}
+  ],
+  panelTitle:"Research Portfolio",
+  panelEyebrow:"Dr. Johnson's Core Research Areas",
+  sections:[
+    {title:"Hopi Dryland Farming",color:P.terra,items:[
+      {text:"Practices and studies dryland farming techniques passed down through 250 generations of Hopi farmers — planting corn 10-12 inches deep to reach residual moisture, without any irrigation, in a landscape receiving less than 10 inches of annual rainfall."},
+      {text:"Curated \"The Resiliency of Hopi Agriculture: 2,000 Years of Planting\" exhibit at the Arizona State Museum, documenting how Hopi farming is not a historical artifact but a living, adaptive practice."},
+      {text:"His work reframes Indigenous agriculture not as primitive or subsistence-level but as a sophisticated, climate-adapted system that modern agriculture can learn from."}
+    ]},
+    {title:"Climate-Resilient Indigenous Crops",color:P.teal,items:[
+      {text:"Collaborating on a Rockefeller Foundation-funded project to revitalize Native American agriculture by increasing the use of Indigenous crops that thrive in local climates without external inputs."},
+      {text:"By prioritizing native species — corn, beans, squash, melons, and other traditional crops — the research strengthens community health and food security while mitigating climate risks."},
+      {text:"Works with the Foundation for Food & Agriculture Research (FFAR) on healthy Indigenous food systems and seed rematriation — returning traditional seeds to tribal communities."}
+    ]},
+    {title:"Food Sovereignty & Policy",color:P.sage,items:[
+      {text:"Advocates for tribal government policies that protect Indigenous agricultural knowledge, including tribal intellectual property protections and agriculture codes."},
+      {text:"Promotes tribal land set-asides for traditional agriculture, ensuring that farming land is preserved for food production rather than converted to other uses."},
+      {text:"Addresses Indigenous data governance — ensuring that traditional agricultural knowledge is controlled by tribal communities, not extracted by outside researchers.",pub:"Collaboration with Dr. Stephanie Russo Carroll on Indigenous data governance"}
+    ]},
+    {title:"Conservation, Soil & Biodiversity",color:P.steel,items:[
+      {text:"Research on soil health in dryland systems — how traditional Hopi farming practices maintain soil structure and fertility without synthetic inputs over millennia."},
+      {text:"Plant and species biodiversity in traditional farming systems, documenting how polyculture and crop rotation maintain ecological balance."},
+      {text:"Co-authored research with Chief and Hoover on groundwater fluoride exposure and its effects on Arizona livestock — connecting water quality to agricultural viability.",pub:"Whitmore et al. (2025)"}
+    ]},
+    {title:"Community Engagement & Education",color:P.brown,items:[
+      {text:"Works directly with tribal colleges, seed keepers, and tribal youth to transmit agricultural knowledge across generations — not just as academic content but as cultural practice."},
+      {text:"Wrote \"Beyond acknowledgement towards meaningful collaboration: Regenerative Agriculture through the lens of a Hopi agriculturalist\" — challenging the mainstream regenerative agriculture movement to engage with Indigenous knowledge holders as equals, not sources.",pub:"Johnson (2023), Forum for the Future"},
+      {text:"Tribal school gardens and traditional foods in schools programs — bringing Indigenous agriculture into K-12 education as both nutrition and cultural revitalization."}
+    ]}
+  ]
+},
+
+devore:{
+  name:"Dr. Cherie De Vore",
+  tribal:"Diné (Navajo)",
+  label:"Core Faculty",
+  role:"Assistant Professor, Chemical & Environmental Engineering · First Native American Faculty, UA Engineering",
+  summary:"An environmental engineer from Crownpoint, NM on the Navajo Nation, De Vore studies the biogeochemical processes that control how toxic metals — arsenic, uranium, iron, manganese — mobilize from abandoned mine waste into surrounding soil and water. Her phytoremediation research investigates how plants growing near mine sites uptake and sequester contaminants, opening pathways for nature-based cleanup of contaminated Indigenous lands. She is the first Native American faculty member in UA's School of Engineering.",
+  center:["MINE WASTE","BIOGEOCHEMISTRY","& INDIGENOUS","LAND HEALTH"],
+  domains:[
+    {label:"Arsenic\nMobilization",color:P.terra,section:0},
+    {label:"Uranium\nUptake",color:P.teal,section:1},
+    {label:"Phyto-\nremediation",color:P.sage,section:2},
+    {label:"Sediment\nChemistry",color:P.steel,section:3},
+    {label:"Geoscience\nEducation",color:P.brown,section:4}
+  ],
+  panelTitle:"Research Portfolio",
+  panelEyebrow:"Dr. De Vore's Core Research Areas",
+  sections:[
+    {title:"Arsenic Release from Mine Waste",color:P.terra,items:[
+      {text:"Investigates how arsenic, iron, and manganese mobilize from contaminated sediment near abandoned mine sites — identifying whether chemical or microbiological processes trigger the release under aerobic vs. anaerobic conditions.",pub:"DeVore et al. (2022), ACS Earth & Space Chemistry"},
+      {text:"Studied the effect of bicarbonate and phosphate on arsenic release from mining-impacted sediments in the Cheyenne River watershed, South Dakota.",pub:"DeVore et al. (2019), Environmental Science Processes and Impacts"},
+      {text:"Her dissertation established foundational knowledge on biogeochemical processes affecting arsenic release and bioavailability near abandoned mine wastes across the Western U.S.",pub:"DeVore (2020), PhD Dissertation"}
+    ]},
+    {title:"Uranium Uptake by Plants",color:P.teal,items:[
+      {text:"Discovered that Tamarix (salt cedar) trees growing along the Rio Paguate near the Jackpile Mine actively uptake uranium, with uranium-phosphorus nanocrystals forming inside their root cells.",pub:"Rodríguez-Freire, DeVore et al. (2021), Env. Sci. Processes and Impacts"},
+      {text:"This finding suggests plants can be used as both biomonitors of contamination and potential agents of remediation — a nature-based approach to cleaning up uranium-contaminated landscapes."},
+      {text:"Research on arsenic accumulation in Little Bluestem grass amended with root-colonizing endophytes — exploring how symbiotic fungi enhance plant uptake of contaminants.",pub:"DeVore et al. (2021), ACS Earth & Space Chemistry"}
+    ]},
+    {title:"Phytoremediation Strategies",color:P.sage,items:[
+      {text:"Developing plant-based remediation strategies for Indigenous lands contaminated by decades of mining — using native and adapted plant species to extract or stabilize toxic metals in soil."},
+      {text:"Endophyte-assisted phytoremediation: studying how root-colonizing fungi can enhance the ability of native grasses to accumulate and tolerate heavy metals."},
+      {text:"This work is particularly relevant to the Navajo Nation, where hundreds of abandoned uranium mines continue to leach contaminants into soil, water, and air."}
+    ]},
+    {title:"Sediment & Contaminant Chemistry",color:P.steel,items:[
+      {text:"Research on mine waste effects on water and soil in Native American land in Western USA — a comprehensive review of how legacy mining contamination persists in Indigenous landscapes.",pub:"Cerrato, DeVore & Velasco (2019), Encyclopedia of Water"},
+      {text:"Studies the geochemistry of hazardous waste dust in the Southwest as part of the UA Superfund Research Center, understanding how wind-blown mine tailings create airborne exposure pathways."},
+      {text:"Investigates how seasonal changes in water chemistry (pH, dissolved oxygen, redox potential) control the timing and magnitude of contaminant release from sediments."}
+    ]},
+    {title:"Geoscience Education & Indigenous Knowledge",color:P.brown,items:[
+      {text:"Co-PI (with Chief) on NSF-funded project to develop partnerships among tribes, geoscientists, and the National Park Service to advance informal geoscience learning at Grand Canyon."},
+      {text:"Working to Indigenize geoscience education — integrating Indigenous knowledge systems into how geology, hydrology, and environmental science are taught and interpreted at national landmarks."},
+      {text:"2025 AISES Most Promising Scientist and Engineer Award. NSF Earth Science Postdoctoral Fellowship (Stanford). Her presence as the first Native American faculty in UA Engineering is itself a milestone in STEM representation."}
+    ]}
+  ]
+}
+
+};
+
+/* ═══════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════ */
+let current = 'ires';
+let selectedDomain = -1;
+let hoveredDomain = -1;
+
+/* ═══════════════════════════════════════
+   TABS — IRes first
+   ═══════════════════════════════════════ */
+const TABS = [
+  {key:'ires',label:'IRes Overview'},
+  {key:'chief',label:'Dr. Karletta Chief'},
+  {key:'hoover',label:'Dr. Joseph Hoover'},
+  {key:'johnson',label:'Dr. Michael K. Johnson'},
+  {key:'devore',label:'Dr. Cherie De Vore'}
+];
+const tabsEl = document.getElementById('tabs');
+TABS.forEach(t=>{
+  const b = document.createElement('button');
+  b.className = 'tab'+(t.key===current?' active':'');
+  b.textContent = t.label;
+  b.dataset.key = t.key;
+  b.onclick = ()=>{ current=t.key; selectedDomain=-1; hoveredDomain=-1;
+    document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.key===t.key));
+    render();
+  };
+  tabsEl.appendChild(b);
+});
+
+/* ═══════════════════════════════════════
+   RENDER
+   ═══════════════════════════════════════ */
+function render(){
+  const d = DATA[current];
+  const intro = document.getElementById('intro');
+  const tribalHTML = d.tribal ? `<span class="tribal">${d.tribal}</span>` : '';
+  intro.innerHTML = `
+    <div class="intro-label">${d.label||''}</div>
+    <div class="intro-name">${d.name}${tribalHTML}</div>
+    <div class="intro-role">${d.role}</div>
+    <div class="intro-summary">${d.summary}</div>
+  `;
+  renderDiagram();
+  renderPanel();
+}
+
+function renderPanel(){
+  const d = DATA[current];
+  const panel = document.getElementById('panel');
+  let html = `<div class="panel-header">
+    <div class="panel-eyebrow">${d.panelEyebrow||''}</div>
+    <div class="panel-title">${d.panelTitle}</div>
+  </div>`;
+
+  d.sections.forEach((s,i)=>{
+    const isOpen = selectedDomain < 0 || selectedDomain === i;
+    html += `<div class="section${isOpen?' open':''}" data-si="${i}">
+      <div class="section-head" onclick="toggleSection(this)">
+        <span class="section-dot" style="background:${s.color}"></span>
+        <span class="section-label">${s.title}</span>
+        <span class="section-arrow">&#9660;</span>
+      </div>
+      <div class="section-body">
+        ${s.items.map(it=>{
+          let h = `<p>${it.text}</p>`;
+          if(it.pub) h += `<div class="pub">${it.pub}</div>`;
+          return h;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  panel.innerHTML = html;
+
+  if(selectedDomain >= 0){
+    const target = panel.querySelector(`.section[data-si="${selectedDomain}"]`);
+    if(target) setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  }
+}
+
+function toggleSection(el){
+  el.parentElement.classList.toggle('open');
+}
+
+/* ═══════════════════════════════════════
+   D3 DIAGRAM — single ring of research domains
+   ═══════════════════════════════════════ */
+function renderDiagram(){
+  const container = document.getElementById('chart');
+  container.innerHTML = '';
+  const d = DATA[current];
+
+  const w = Math.min(520, window.innerWidth - 500, window.innerWidth * 0.55);
+  const size = Math.max(340, w);
+  const cx = size/2, cy = size/2;
+
+  const cR = size * 0.20;
+  const gap = size * 0.025;
+  const oR1 = cR + gap;
+  const oR2 = oR1 + size * 0.20;
+
+  const svg = d3.select(container).append('svg')
+    .attr('viewBox',`0 0 ${size} ${size}`)
+    .attr('width',size).attr('height',size);
+  const g = svg.append('g').attr('transform',`translate(${cx},${cy})`);
+
+  // Defs
+  const defs = svg.append('defs');
+  const isDark = document.body.classList.contains('dark');
+
+  // Center gradient
+  const cg = defs.append('radialGradient').attr('id','cgrad');
+  cg.append('stop').attr('offset','0%').attr('stop-color',isDark?'#1e2530':'#fff');
+  cg.append('stop').attr('offset','100%').attr('stop-color',isDark?'#161b22':'#f0ece5');
+
+  // Glow filter
+  const filt = defs.append('filter').attr('id','glow').attr('x','-30%').attr('y','-30%').attr('width','160%').attr('height','160%');
+  filt.append('feGaussianBlur').attr('stdDeviation','4').attr('result','blur');
+  filt.append('feMerge').selectAll('feMergeNode').data(['blur','SourceGraphic'])
+    .enter().append('feMergeNode').attr('in',d=>d);
+
+  // Outer ring arcs
+  const arcGen = d3.arc().innerRadius(oR1).outerRadius(oR2).padAngle(0.04).cornerRadius(5);
+  const pie = d3.pie().value(1).sort(null)(d.domains);
+
+  const arcs = g.selectAll('.seg').data(pie).enter().append('path')
+    .attr('class','seg')
+    .attr('d',arcGen)
+    .attr('fill',(dd,i)=>d.domains[i].color)
+    .attr('opacity',.88)
+    .on('mouseenter',(ev,dd)=>{
+      hoveredDomain = dd.index;
+      updateArcStates(arcs, d);
+    })
+    .on('mouseleave',()=>{
+      hoveredDomain = -1;
+      updateArcStates(arcs, d);
+    })
+    .on('click',(ev,dd)=>{
+      const si = d.domains[dd.index].section;
+      selectedDomain = selectedDomain===si ? -1 : si;
+      updateArcStates(arcs, d);
+      renderPanel();
+    });
+
+  // Arc labels — positioned at centroid of each arc
+  pie.forEach((dd,i)=>{
+    const a = (dd.startAngle+dd.endAngle)/2;
+    const r = (oR1+oR2)/2;
+    const lines = d.domains[i].label.split('\n');
+    const tg = g.append('g').attr('class','seg-text')
+      .attr('transform',`translate(${r*Math.sin(a)},${-r*Math.cos(a)})`);
+    lines.forEach((ln,li)=>{
+      tg.append('text').attr('text-anchor','middle')
+        .attr('dy',`${(li-(lines.length-1)/2)*1.15}em`)
+        .attr('fill','#fff').attr('font-size',`${Math.max(8, size*0.022)}px`)
+        .attr('font-weight','700').attr('letter-spacing','.02em')
+        .attr('font-family','Josefin Sans, sans-serif')
+        .text(ln);
+    });
+  });
+
+  // Center circle with border
+  g.append('circle').attr('r',cR).attr('fill','url(#cgrad)')
+    .attr('stroke',isDark?'#2a3040':'#c8c2b8')
+    .attr('stroke-width',2);
+
+  // Center text
+  d.center.forEach((ln,i)=>{
+    g.append('text').attr('class','center-text')
+      .attr('text-anchor','middle')
+      .attr('dy',`${(i-(d.center.length-1)/2)*1.3}em`)
+      .attr('fill',isDark?'#e6e8eb':'#1a1a1a')
+      .attr('font-size',`${Math.max(9,size*0.025)}px`)
+      .attr('font-weight','700').attr('letter-spacing','.05em')
+      .attr('font-family','Josefin Sans, sans-serif')
+      .text(ln);
+  });
+}
+
+function updateArcStates(arcs, d){
+  arcs.each(function(dd,i){
+    const el = d3.select(this);
+    const si = d.domains[i].section;
+    const isHovered = hoveredDomain === i;
+    const isSelected = selectedDomain >= 0 && selectedDomain === si;
+    const somethingActive = hoveredDomain >= 0 || selectedDomain >= 0;
+
+    if(isHovered){
+      el.attr('opacity',1).attr('filter','url(#glow)').classed('dim',false);
+    } else if(isSelected){
+      el.attr('opacity',1).attr('filter','url(#glow)').classed('dim',false);
+    } else if(somethingActive){
+      el.attr('opacity',.25).attr('filter',null).classed('dim',true);
+    } else {
+      el.attr('opacity',.88).attr('filter',null).classed('dim',false);
+    }
+  });
+}
+
+/* ═══════════════════════════════════════
+   THEME
+   ═══════════════════════════════════════ */
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  document.getElementById('themeBtn').textContent =
+    document.body.classList.contains('dark') ? 'Light Mode' : 'Dark Mode';
+  renderDiagram();
+}
+
+/* ═══════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════ */
+let rt;
+window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderDiagram,200);});
+render();
+</script>
+</body>
+</html>
