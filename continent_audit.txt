@@ -1,0 +1,66 @@
+=== Africa ===
+Kenya: 2
+Kenya/UK: 1
+Multiple countries: 2
+Nigeria: 1
+Rwanda: 1
+Senegal: 1
+South Africa: 6
+
+=== Asia ===
+China: 4
+India: 2
+Indonesia: 3
+Japan: 3
+Kyrgyzstan: 1
+Laos: 1
+Malaysia: 3
+Mongolia: 1
+Myanmar: 1
+Nepal: 1
+Philippines: 1
+Russia: 1
+Taiwan: 10
+Tajikistan, Kyrgyzstan: 1
+Thailand: 1
+Vietnam: 1
+
+=== Europe ===
+Finland: 3
+Germany: 1
+Norway: 4
+Norway, Sweden, Finland: 1
+Russia: 3
+Sweden: 2
+Switzerland: 1
+United Kingdom: 6
+
+=== North America ===
+Belize: 2
+Canada: 17
+Costa Rica: 1
+Greenland: 1
+Greenland, Canada, USA, Russia: 1
+Guatemala: 2
+Mexico: 4
+Multiple countries: 5
+United States: 25
+
+=== Oceania ===
+Aotearoa New Zealand: 7
+Australia: 11
+Fiji: 1
+Papua New Guinea: 1
+
+=== South America ===
+Argentina: 4
+Bolivia: 5
+Brazil: 6
+Chile: 5
+Colombia: 6
+Ecuador: 3
+Multiple countries: 1
+Paraguay: 3
+Peru: 9
+Uruguay: 3
+

@@ -1,0 +1,177 @@
+{
+  "continentCounts": {
+    "Oceania": 20,
+    "North America": 58,
+    "Asia": 35,
+    "Africa": 13,
+    "South America": 45,
+    "Europe": 21,
+    "Regional": 1
+  },
+  "topCountries": [
+    [
+      "United States",
+      25
+    ],
+    [
+      "Canada",
+      17
+    ],
+    [
+      "Australia",
+      11
+    ],
+    [
+      "Taiwan",
+      10
+    ],
+    [
+      "Peru",
+      9
+    ],
+    [
+      "Multiple countries",
+      8
+    ],
+    [
+      "Aotearoa New Zealand",
+      7
+    ],
+    [
+      "South Africa",
+      6
+    ],
+    [
+      "Brazil",
+      6
+    ],
+    [
+      "United Kingdom",
+      6
+    ],
+    [
+      "Colombia",
+      6
+    ],
+    [
+      "Chile",
+      5
+    ],
+    [
+      "Bolivia",
+      5
+    ],
+    [
+      "Russia",
+      4
+    ],
+    [
+      "Mexico",
+      4
+    ],
+    [
+      "Norway",
+      4
+    ],
+    [
+      "Argentina",
+      4
+    ],
+    [
+      "China",
+      4
+    ],
+    [
+      "Paraguay",
+      3
+    ],
+    [
+      "Malaysia",
+      3
+    ]
+  ],
+  "topPrimaryThemes": [
+    [
+      "interdisciplinary indigenous studies",
+      63
+    ],
+    [
+      "governance/legal rights",
+      34
+    ],
+    [
+      "language/culture",
+      29
+    ],
+    [
+      "environmental/land/ecology",
+      26
+    ],
+    [
+      "health/wellbeing",
+      17
+    ],
+    [
+      "economics/development",
+      12
+    ],
+    [
+      "archaeology/heritage",
+      7
+    ],
+    [
+      "education",
+      4
+    ],
+    [
+      "data governance",
+      1
+    ]
+  ],
+  "languageGroups": [
+    [
+      "English",
+      125
+    ],
+    [
+      "Indigenous/local language",
+      32
+    ],
+    [
+      "English + Indigenous/local language",
+      15
+    ],
+    [
+      "Other language",
+      12
+    ],
+    [
+      "Spanish",
+      3
+    ],
+    [
+      "English, French",
+      1
+    ],
+    [
+      "Russian, Evenki, Even, Sakha",
+      1
+    ],
+    [
+      "Spanish, Kichwa",
+      1
+    ],
+    [
+      "Spanish, Guaraní",
+      1
+    ],
+    [
+      "Portuguese, Arawak, Mura",
+      1
+    ],
+    [
+      "Spanish, English, Wachiperi, Machiguenga",
+      1
+    ]
+  ]
+}
